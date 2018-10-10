@@ -1,0 +1,57 @@
+{
+  "name": "@rnd7/ctrl",
+  "version": "1.0.0",
+  "description": "Generic user interface components designed to interact with synthesizers or other realtime applications.",
+  "main": "dist/ctrl-min.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp4 --require @babel/register --gulpfile tasks",
+    "watch": "gulp4 watch --require @babel/register --gulpfile tasks"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rnd7/ctrl.git"
+  },
+  "keywords": [
+    "gui",
+    "ui",
+    "rnd7",
+    "controls",
+    "realtime"
+  ],
+  "author": "rnd7",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rnd7/ctrl/issues"
+  },
+  "homepage": "https://github.com/rnd7/ctrl#readme",
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-ignore": "^2.0.2",
+    "gulp-rename": "^1.4.0",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.1",
+    "gulp-watch": "^5.0.1",
+    "gulp4": "^4.0.2",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-middleware": "^3.4.0"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": "> 0.25%, not dead"
+        }
+      ]
+    ]
+  }
+}

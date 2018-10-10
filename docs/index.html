@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>rnd7 CTRL</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background-color: #444444;
+      color: #FFFFFF;
+      font-family: monospace;
+    }
+    body{
+
+        margin: 12px;
+    }
+    h1, h2{
+      font-size: 1em;
+      padding: .5em;
+      margin: 0;
+      font-weight: normal;
+      text-align: center;
+    }
+    h1 {
+      font-weight: bold;
+    }
+    h2{
+      background-color: #333333;
+    }
+    .control-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #222222;
+      max-height: 256px;
+      margin-bottom: 1em;
+    }
+  </style>
+  <script src="bundle.js"></script>
+</head>
+<body>
+  <h1>rnd7 CTRL</h1>
+  <h2>Rotary</h2>
+  <div id="rotary" class="control-container"></div>
+  <h2>Rotary (Stepper)</h2>
+  <div id="rotary-stepper"class="control-container"></div>
+</body>
+</html>
