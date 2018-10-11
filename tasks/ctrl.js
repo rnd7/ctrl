@@ -18,7 +18,9 @@ export const config = {
   mode: isProduction ? "production" : "development",
   output: {
     filename: 'ctrl-min.js',
-    path: path.resolve(__dirname, '../dist')
+    path: path.resolve(__dirname, '../dist'),
+    libraryTarget: 'umd',
+    library: 'ctrl'
   },
   context: path.resolve(__dirname, '../src/ctrl'),
   optimization: {
