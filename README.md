@@ -33,7 +33,7 @@ import { Rotary } from '@rnd7/ctrl'
 
 ## Usage
 ```javascript
-new Rotary({ selector:'#rotary' }).on("change", e => console.log)
+new Rotary({ selector:'#rotary' }).on("change", e => console.log(e.detail.value))
 ```
 
 ## Defaults
