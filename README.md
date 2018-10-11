@@ -1,4 +1,4 @@
-# CTRL (BETA)
+# CTRL
 Generic user interface components designed to interact with synthesizers or other realtime applications.
 
 ## Download
