@@ -42,6 +42,7 @@ new Rotary({ selector:'#rotary' }).on("change", e => console.log(e.detail.value)
 {
   observeSize: false, // poll for parent size changes
   sizeFromParent: true, // fit within parent bounds
+  eventMode: VALUE, // online fire events when value changed
   speed: .01, // value per frame
   value: 0., // 0-1
   disabled: false, // non interactive
@@ -83,6 +84,8 @@ set selector(val)
 get selector()
 set parent(val)
 get parent()
+set eventMode(val)
+get eventMode()
 set value(val)
 get value()
 set trackSector(val)
@@ -91,6 +94,8 @@ set target(val)
 get target()
 set steps(val)
 get steps()
+set step(val)
+get step()
 set neutralAngle(val)
 get neutralAngle()
 set sizeFromParent(val)
@@ -134,6 +139,16 @@ get domElement()
 // Resize and draw
 fitParent()
 redraw()
+```
+
+Event Modes
+```javascript
+export const NONE = "none" // no events fired
+export const VALUE = "value" // only on value changes
+export const TARGET = "target" // only on target changes
+export const STEP = "step" // only on step changes
+export const COMPLETE = "complete" // only when value reaches target
+export const ALWAYS = "always" // while user interacts
 ```
 
 ## Development
