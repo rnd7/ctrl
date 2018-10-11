@@ -45,8 +45,6 @@ export const ROTARY_DEFAULTS = {
   trackSize: 12, // width of the track
   trackSector: TAU * .8, // track span as circular sector
   trackSectorColor: 'rgb(66,66,66)',
-  mouseSector: TAU / 12, // size of mouse indicator
-  mouseSectorColor: 'rgba(170,170,255,.5)',
   valueSector: TAU / 48, // size of value indicator
   valueSectorColor: 'rgb(255,255,255)',
   targetSector: TAU / 48, // size of target indicator
@@ -240,15 +238,6 @@ export class Rotary {
     return this._speed
   }
 
-  set mouseSector(val) {
-    if (this._mouseSector == val) return
-    this._mouseSector = val
-    this.redraw()
-  }
-  get mouseSector() {
-    return this._mouseSector
-  }
-
   set targetSector(val) {
     if (this._targetSector == val) return
     this._targetSector = val
@@ -330,15 +319,6 @@ export class Rotary {
   }
   get trackSectorColor() {
     return this._trackSectorColor
-  }
-
-  set mouseSectorColor(val) {
-    if (this._mouseSectorColor == val) return
-    this._mouseSectorColor = val
-    this.redraw()
-  }
-  get mouseSectorColor() {
-    return this._mouseSectorColor
   }
 
   set borderColor(val) {
@@ -580,14 +560,6 @@ export class Rotary {
           }
         }
       }
-    }
-    if (this._dragging) {
-      // show mouse angle while dragging
-      start = this._mouseAngle - this._mouseSector / 2
-      end = this._mouseAngle + this._mouseSector / 2
-      ctx.fillStyle = this._mouseSectorColor
-      drawTorusSegment(ctx, cx, cy, outer, inner, start, end)
-      ctx.fill()
     }
     this._redraw = false
   }

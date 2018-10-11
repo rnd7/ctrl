@@ -55,8 +55,6 @@ new Rotary({ selector:'#rotary' }).on("change", e => console.log(e.detail.value)
   trackSize: 12, // width of the track
   trackSector: TAU * .8, // track span as circular sector
   trackSectorColor: 'rgb(66,66,66)',
-  mouseSector: TAU / 12, // size of mouse indicator
-  mouseSectorColor: 'rgba(170,170,255,.5)',
   valueSector: TAU / 48, // size of value indicator
   valueSectorColor: 'rgb(255,255,255)',
   targetSector: TAU / 48, // size of target indicator
@@ -103,8 +101,6 @@ set height(val)
 get height()
 set speed(val)
 get speed()
-set mouseSector(val)
-get mouseSector()
 set targetSector(val)
 get targetSector()
 set valueSector(val)
@@ -123,8 +119,6 @@ set valueSectorColor(val)
 get valueSectorColor()
 set trackSectorColor(val)
 get trackSectorColor()
-set mouseSectorColor(val)
-get mouseSectorColor()
 set borderColor(val)
 get borderColor()
 set borderFocusColor(val)
