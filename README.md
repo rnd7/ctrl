@@ -7,9 +7,33 @@ Generic user interface components designed to interact with synthesizers or othe
 ## Example
 Navigate to [CTRL](https://rnd7.github.io/ctrl/)
 
+## Installation
+
+```bash
+npm i @rnd7/ctrl
+
+```
+
+## Include
+
+Via script tag
+```
+<script src="node_modules/@rnd7/ctrl/dist/ctrl-min.js"></script>
+```
+
+Using require
+```javascript
+const ctrl = require('@rnd7/ctrl')
+```
+
+Using import
+```javascript
+import { Rotary } from '@rnd7/ctrl'
+```
+
 ## Usage
 ```javascript
-new Rotary({ selector:'#rotary'}).on("change", e => {console.log(e.detail.value)})
+new Rotary({ selector:'#rotary' }).on("change", e => console.log)
 ```
 
 ## Defaults
