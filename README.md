@@ -142,6 +142,34 @@ fitParent()
 redraw()
 ```
 
+## Development
+You need git and npm.
+
+Get the sources
+```bash
+git clone https://github.com/rnd7/ctrl.git
+```
+
+Install development devDependencies such as gulp and webpack.
+```bash
+npm install
+```
+
+Build example and watch changes (no hot reload)
+```bash
+npm run watch
+```
+
+Open example in your favorite browser.
+```
+docs/index.html
+```
+
+Production build
+```bash
+npm run build
+```
+
 
 ## License
-See the [LICENSE](LICENSE.md) file for software license rights and limitations (MIT).
+See the [LICENSE](https://github.com/rnd7/ctrl/tree/master/LICENSE.md) file for software license rights and limitations (MIT).
