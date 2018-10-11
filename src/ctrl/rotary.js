@@ -29,10 +29,20 @@ function drawTorusSegment(ctx, x, y, outer, inner, start, end) {
   ctx.closePath()
 }
 
+// Event Modes
+export const NONE = "none" // no events fired
+export const VALUE = "value" // only on value changes
+export const TARGET = "target" // only on target changes
+export const STEP = "step" // only on step changes
+export const COMPLETE = "complete" // only when value reaches target
+export const ALWAYS = "always" // while user interacts
+
+
 export const ROTARY_DEFAULTS = {
   observeSize: false, // poll for parent size changes
   sizeFromParent: true, // fit within parent bounds
-  speed: .01, // value per frame
+  eventMode: VALUE, // online fire events when value changed
+  speed: .01, // value per frame 0 and 1 eq instant change
   value: 0., // 0-1
   disabled: false, // non interactive
   neutralAngle: -HALF_PI, // track orientation
@@ -40,7 +50,7 @@ export const ROTARY_DEFAULTS = {
   borderColor: 'rgb(12,12,12)',
   borderFocusColor: 'rgb(0,0,80)',
   backgroundColor: 'rgb(36,36,36)',
-  steps: 0, // 2-n to specify steps
+  steps: 1, // 1-n to specify steps 1 is continous
   stepGap: TAU / 360, // stepper only. gap between segments
   trackSize: 12, // width of the track
   trackSector: TAU * .8, // track span as circular sector
@@ -142,6 +152,13 @@ export class Rotary {
     this._canvas.removeEventListener.apply(this._canvas, args)
   }
 
+  set eventMode(val) {
+    this._eventMode = val
+  }
+  get eventMode() {
+    return this._eventMode
+  }
+
   set selector(val) {
     this._selector = val
     this.parent = document.querySelector(this._selector)
@@ -187,11 +204,19 @@ export class Rotary {
 
   set steps(val) {
     if (this._steps == val) return
-    this._steps = val
+    this._steps = Math.max(1,val)
     this.redraw()
   }
   get steps() {
     return this._steps
+  }
+
+  get step() {
+    return Math.floor(this._value * this._steps)
+  }
+
+  set step(val) {
+    this.value = val / this._steps
   }
 
   set neutralAngle(val) {
@@ -409,18 +434,30 @@ export class Rotary {
   }
 
   _dispatchChangeEvent() {
+    if (
+      this._eventMode === NONE
+      || (this._eventMode === VALUE && this._lastEventValue == this._value)
+      || (this._eventMode === TARGET && this._lastEventTarget == this._target)
+      || (this._eventMode === STEP && this._lastEventStep == this.step)
+      || (this._eventMode === COMPLETE && this._value != this._target)
+    ) return
     this._canvas.dispatchEvent(
       new CustomEvent(
         'change',
         {
           bubbles: true,
           detail: {
+            step: this.step,
             value: this._value,
+            target: this._target,
             component: this
           }
         }
       )
     )
+    this._lastEventValue = this._value
+    this._lastEventTarget = this._target
+    this._lastEventStep = this.step
   }
 
   _loop() {
