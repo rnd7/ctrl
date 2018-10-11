@@ -42,7 +42,7 @@ new Rotary({ selector:'#rotary' }).on("change", e => console.log(e.detail.value)
 {
   observeSize: false, // poll for parent size changes
   sizeFromParent: true, // fit within parent bounds
-  eventMode: VALUE, // online fire events when value changed
+  eventMode: VALUE, // define when change events are triggered
   speed: .01, // value per frame
   value: 0., // 0-1
   disabled: false, // non interactive
