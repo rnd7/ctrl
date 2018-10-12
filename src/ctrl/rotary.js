@@ -44,6 +44,8 @@ export const ROTARY_DEFAULTS = {
   eventMode: VALUE, // online fire events when value changed
   speed: .01, // value per frame 0 and 1 eq instant change
   value: 0., // 0-1
+  initialChangeEvent: true, // trigger change event when listener added
+  keepTarget: false, // value setter does not overwrite target
   disabled: false, // non interactive
   neutralAngle: -HALF_PI, // track orientation
   borderRadius: 2,
@@ -67,6 +69,7 @@ export class Rotary {
     this._canvas.tabIndex = 0
     this._canvas.style.outline = 0
     this._canvas.style.userSelect = "none"
+    this._canvas.style.cursor = "pointer"
     this._ctx = this._canvas.getContext("2d")
     this._target = null
     this._mouseX = 0.
@@ -80,8 +83,7 @@ export class Rotary {
       blur: this.blur.bind(this)
     }
 
-    Object.assign(this, ROTARY_DEFAULTS, opts)
-
+    this.assign(ROTARY_DEFAULTS, opts)
     if (this.target === null) this.target = this.value // if no target use value
 
     this._canvas.addEventListener("mousedown", this._bound.startDrag)
@@ -137,19 +139,37 @@ export class Rotary {
   }
 
   on(...args) {
-    this._canvas.addEventListener.apply(this._canvas, args)
+    this.addEventListener.apply(this, args)
   }
 
   addEventListener(...args) {
     this._canvas.addEventListener.apply(this._canvas, args)
+    if (this._initialChangeEvent) this._dispatchChangeEvent(true)
   }
 
   off(...args) {
-    this._canvas.removeEventListener.apply(this._canvas, args)
+    this.removeEventListener.apply(this, args)
   }
 
   removeEventListener(...args) {
     this._canvas.removeEventListener.apply(this._canvas, args)
+  }
+
+  assign (...args) {
+    this._bulkAssign = true
+    args.forEach((arg) => {
+      Object.assign(this, arg)
+    })
+    this._bulkAssign = false
+    if (this._redraw) this._loop()
+  }
+
+  set initialChangeEvent(val) {
+    if (this._initialChangeEvent == val) return
+    this._initialChangeEvent = val
+  }
+  get initialChangeEvent() {
+    return this._initialChangeEvent
   }
 
   set eventMode(val) {
@@ -178,6 +198,7 @@ export class Rotary {
   set value(val) {
     if (this._value == val) return
     this._value = clamp(val)
+    if (!this._bulkAssign) this.target = this._value
     this.redraw()
   }
   get value() {
@@ -202,6 +223,15 @@ export class Rotary {
     return this._target
   }
 
+  set keepTarget(val) {
+    if (this._keepTarget == val) return
+    this._keepTarget = val
+  }
+  get keepTarget() {
+    return this._keepTarget
+  }
+
+
   set steps(val) {
     if (this._steps == val) return
     this._steps = Math.max(1,val)
@@ -212,11 +242,19 @@ export class Rotary {
   }
 
   get step() {
-    return Math.floor(this._value * this._steps)
+    return Math.round(this._value * (this._steps-1))
   }
 
   set step(val) {
     this.value = val / this._steps
+  }
+
+  get targetStep() {
+    return Math.round(this._target * (this._steps-1))
+  }
+
+  set targetStep(val) {
+    this.target = val / this._steps
   }
 
   set neutralAngle(val) {
@@ -395,7 +433,7 @@ export class Rotary {
 
   redraw() {
     this._redraw = true
-    this._loop()
+    if (!this._bulkAssign) this._loop()
   }
 
   _resizeCanvas() {
@@ -433,13 +471,16 @@ export class Rotary {
     this.redraw()
   }
 
-  _dispatchChangeEvent() {
+  _dispatchChangeEvent(force) {
     if (
-      this._eventMode === NONE
-      || (this._eventMode === VALUE && this._lastEventValue == this._value)
-      || (this._eventMode === TARGET && this._lastEventTarget == this._target)
-      || (this._eventMode === STEP && this._lastEventStep == this.step)
-      || (this._eventMode === COMPLETE && this._value != this._target)
+      !force
+      && (
+        this._eventMode === NONE
+        || (this._eventMode === VALUE && this._lastEventValue == this._value)
+        || (this._eventMode === TARGET && this._lastEventTarget == this._target)
+        || (this._eventMode === STEP && this._lastEventStep == this.step)
+        || (this._eventMode === COMPLETE && this._value != this._target)
+      )
     ) return
     this._canvas.dispatchEvent(
       new CustomEvent(
@@ -473,17 +514,12 @@ export class Rotary {
     this._animationFrame = window.requestAnimationFrame(() => {
       let render = this._dragging || this._redraw
       if (this._value != this._target) {
-        if (this.speed <= 0) {
-          // speed lte 0 just set value
-          this._value = this._target
+        if (this.speed && this._value + this._speed <= this._target ) {
+          this._value += this._speed
+        } else if (this.speed && this._value- this._speed >= this._target ) {
+          this._value -= this._speed
         } else {
-          if (this._value + this._speed <= this._target ) {
-            this._value += this._speed
-          } else if (this._value- this._speed >= this._target ) {
-            this._value -= this._speed
-          } else {
-            this._value = this._target
-          }
+          this._value = this._target
         }
         render = true
         this._dispatchChangeEvent()
@@ -574,7 +610,8 @@ export class Rotary {
 
       const segmentSector = this._trackSector / this._steps
       const stepScale = 1 / this._steps
-
+      const step = this.step
+      const targetStep = this.targetStep
       // draw segment for every step
       for (let i = 0; i < this._steps; i++) {
         start = mod(zero + segmentSector * i, TAU) + this._stepGap
@@ -583,18 +620,18 @@ export class Rotary {
         ctx.fillStyle = this._trackSectorColor
         drawTorusSegment(ctx, cx, cy, outer, inner, start, end)
         ctx.fill()
-        if (value >= i * stepScale && value <= (i + 1) * stepScale) {
+        if (step == i) {
           // segment matches current value
           ctx.fillStyle = this._valueSectorColor
           drawTorusSegment(ctx, cx, cy, outer, inner, start, end)
           ctx.fill()
-        } else if (value != target) {
-          if (target >= i * stepScale && target <= (i + 1) * stepScale) {
+        } else if (value != target && targetStep == i) {
+          //if (target >= i * stepScale && target <= (i + 1) * stepScale) {
             // current value neq target value segement matches selected step
             ctx.fillStyle = this._targetSectorColor
             drawTorusSegment(ctx, cx, cy, outer, inner, start, end)
             ctx.fill()
-          }
+        //  }
         }
       }
     }
