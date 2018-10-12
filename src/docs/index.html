@@ -7,12 +7,11 @@
     html, body {
       margin: 0;
       min-height: 100%;
-      background-color: #444444;
+      background-color: #444;
       color: #FFFFFF;
       font-family: monospace;
     }
     body{
-
         margin: 12px;
     }
     h1, h2{
@@ -26,24 +25,73 @@
       font-weight: bold;
     }
     h2{
-      background-color: #333333;
+      background-color: #333;
     }
-    .control-container {
+    .example-container {
+      display: flex;
+      margin-bottom: 1em;
+      flex-direction: column;
+
+    }
+    .control {
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #222222;
-      max-height: 256px;
-      margin-bottom: 1em;
+      background-color: #222;
+      height: 128px;
+      transition:height 300ms ease-in-out, height 300ms ease-in-out;
+
+    }
+    .control.big {
+      height: 256px;
+    }
+    .display {
+      background-color: #111;
+      font-size: 2em;
+      font-weight: bold;
+      text-align: center;
+    }
+    button {
+      text-align: center;
+      flex: 1;
+      background-color: #335;
+      border: none;
+      outline: none;
+      color: #FFF;
+      font-family: monospace;
+      padding: .5em;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #557;
     }
   </style>
   <script src="bundle.js"></script>
 </head>
 <body>
   <h1>rnd7 CTRL</h1>
-  <h2>Rotary</h2>
-  <div id="rotary" class="control-container"></div>
-  <h2>Rotary (Stepper)</h2>
-  <div id="rotary-stepper"class="control-container"></div>
+  <div class="example-container">
+    <h2>Rotary Example 1</h2>
+    <div id="rotary-1" class="control"></div>
+  </div>
+  <div class="example-container">
+    <h2>Rotary Example 1</h2>
+    <div id="rotary-2" class="control"></div>
+    <div id="rotary-2-display" class="display">0</div>
+  </div>
+  <div class="example-container">
+    <h2>Rotary Example 3</h2>
+    <div id="rotary-3" class="control"></div>
+    <div id="rotary-3-display" class="display">0</div>
+  </div>
+  <div class="example-container">
+    <h2>Rotary Example 4</h2>
+    <div id="rotary-4" class="control"></div>
+  </div>
+  <div class="example-container">
+    <h2>Rotary Example 5</h2>
+    <button id="rotary-5-button">Toggle size</button>
+    <div id="rotary-5" class="control"></div>
+  </div>
 </body>
 </html>
