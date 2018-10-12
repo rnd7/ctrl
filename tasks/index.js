@@ -4,7 +4,6 @@ import { transpileComponents, bundleComponents } from './ctrl'
 import { bundleDocs, copyStatic, watchAll } from './docs'
 
 export const build = gulp.parallel(
-  transpileComponents,
   bundleComponents,
   copyStatic,
   bundleDocs
