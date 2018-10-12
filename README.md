@@ -45,6 +45,8 @@ new Rotary({ selector:'#rotary' }).on("change", e => console.log(e.detail.value)
   eventMode: VALUE, // define when change events are triggered
   speed: .01, // value per frame
   value: 0., // 0-1
+  initialChangeEvent: true, // trigger change event when listener added
+  keepTarget: false, // value setter does not overwrite target  
   disabled: false, // non interactive
   neutralAngle: -HALF_PI, // track orientation
   borderRadius: 2,
@@ -65,25 +67,36 @@ new Rotary({ selector:'#rotary' }).on("change", e => console.log(e.detail.value)
 
 ## API
 
+These method are primarily used by the component itself but you might also call those intentionally.
 ```javascript
-// Interactive
 startDrag(e)
 drag(e)
 stopDrag(e)
 focus(e)
 blur(e)
+```
 
-// Event Listeners
+Register event listeners. Listen for the "change" event to react on user interaction.
+```javascript
 on(...args)
 addEventListener(...args)
 off(...args)
 removeEventListener(...args)
+```
 
-// Getter / Setter
+Assign mutliple values at once. Pass one or more Objects as args. Those values are guaranteed not interfere.
+```javascript
+assign(...args)
+```
+
+Getters and Setters
+```javascript
 set selector(val)
 get selector()
 set parent(val)
 get parent()
+set initialChangeEvent(val)
+get initialChangeEvent()
 set eventMode(val)
 get eventMode()
 set value(val)
@@ -92,10 +105,14 @@ set trackSector(val)
 get trackSector()
 set target(val)
 get target()
+set keepTarget(val)
+get keepTarget()
 set steps(val)
 get steps()
-set step(val)
-get step()
+set step(val) // virtual, affecting value
+get step() // virtual, returns transformed value
+set targetStep(val) // virtual, affecting target
+get targetStep() // virtual, returns transformed target
 set neutralAngle(val)
 get neutralAngle()
 set sizeFromParent(val)
@@ -132,11 +149,11 @@ set backgroundColor(val)
 get backgroundColor()
 set targetSectorColor(val)
 get targetSectorColor()
+get domElement() // getter only
+```
 
-// Getter only
-get domElement()
-
-// Resize and draw
+Force resize and draw
+```javascript
 fitParent()
 redraw()
 ```
